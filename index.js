@@ -17,7 +17,7 @@ const client = new Client({
     ],
     ws: {
         properties: {
-            browser: 'Discord Android' // Botun profilinde mobil ikonu çıkmasını sağlar
+            browser: 'Discord Android'
         }
     }
 });
@@ -55,7 +55,7 @@ client.once(Events.ClientReady, () => {
     console.log(`${client.user.tag} aktif ve müzik çalmaya hazır!`);
 
     client.user.setActivity('以毛澤東的名義！', {
-        type: ActivityType.Custom // Özel durum olarak gösterir (Oynuyor/İzliyor yazısı olmadan)
+        type: ActivityType.Custom
     });
 });
 
@@ -77,11 +77,11 @@ client.on(Events.MessageCreate, async (message) => {
     }
 });
 
-// Bot kanaldan atılırsa veya bağlantısı koparsa otomatik geri bağlanma
+
 client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
     if (oldState.id !== client.user.id) return;
 
-    // Bot ses kanalından atıldıysa veya bağlantısı koptuysa
+    
     if (oldState.channelId && !newState.channelId) {
         const radio = client.radioData.get(oldState.guild.id);
         
@@ -93,12 +93,12 @@ client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
                     const targetChannel = oldState.guild.channels.cache.get(radio.voiceChannelId);
                     if (!targetChannel) return;
 
-                    // 1. Önce DisTube'un hafızasındaki eski/bozuk ses bağlantısını zorla temizle
+                    
                     try {
                         distube.voices.leave(oldState.guild.id);
                     } catch (e) {}
 
-                    // 2. Kısa bir bekleme sonrası sıfırdan tekrar bağlan ve çal
+                   
                     setTimeout(async () => {
                         await distube.play(targetChannel, radio.query, {
                             member: radio.member,
@@ -121,7 +121,7 @@ client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
 
 distube
     .on('playSong', (queue, song) => {
-        // Döngü açıkken aynı şarkı her başa sardığında tekrar mesaj atmasını engeller
+        
         if (queue.repeatMode === 1 && queue.lastSongId === song.id) return;
         queue.lastSongId = song.id;
 
